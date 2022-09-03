@@ -10,7 +10,7 @@ FPS=144
 def loadImages():
     pieces = ["bP","bQ","bK","bB","bN","bR","wP","wQ","wK","wB","wN","wR","bPt","bQt","bKt","bBt","bNt","bRt","wPt","wQt","wKt","wBt","wNt","wRt"]
     for piece in pieces:
-        IMAGES[piece] = p.transform.smoothscale(p.image.load("Images/" + piece + ".png"),(SQ_SIZE,SQ_SIZE))
+        IMAGES[piece] = p.transform.smoothscale(p.image.load("Python/Chess/Images/" + piece + ".png"),(SQ_SIZE,SQ_SIZE))
 
 def DrawState(screen,board,selected_piece,moves):
     x,y=p.mouse.get_pos()
