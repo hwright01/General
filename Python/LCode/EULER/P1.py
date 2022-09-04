@@ -5,4 +5,5 @@ def res_sum(nums, max_num):
             total = total + num
     return total
 
-print(res_sum([3,5], 1000))
+
+print(res_sum([3, 5], 1000))
