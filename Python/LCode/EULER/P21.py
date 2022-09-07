@@ -13,7 +13,7 @@ def factor_list_max(n):
                 facs.update({i, int(num/i)})
                 try:
                     facs.remove(num)
-                except:
+                except Exception:
                     pass
                 factors[num].update(facs)
             i = i - 1
@@ -35,5 +35,6 @@ def amicable(n):
                 result.append(ind)
             else:
                 result = result + [sumval, ind]
+
 
 print(sum(amicable(10000)))

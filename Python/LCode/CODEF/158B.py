@@ -8,8 +8,8 @@ def main():
     counts[1] = counts[1] % 2
 
     count = count + min(counts[2], counts[0])
-    counts[2], counts[0] = counts[2] - min(counts[2], counts[0]), counts[0] - min(counts[2], counts[0])
-
+    counts[2] = counts[2] - min(counts[2], counts[0])
+    counts[0] = counts[0] - min(counts[2], counts[0])
     return count + -((counts[0] + 2*counts[1]) // -4) + counts[2]
 
 

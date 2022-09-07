@@ -5,7 +5,8 @@ def main():
         given = given.replace(vowel, '')
     given = [(x.swapcase() if x.isupper() else x) for x in given]
     given = '.'.join(given)
-    return ''.join(['.',given])
+    return ''.join(['.', given])
+
 
 if __name__ == "__main__":
     print(main())

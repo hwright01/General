@@ -5,5 +5,6 @@ def main():
         count = count + num.count('+') - num.count('-')
     return int(count / 2)
 
+
 if __name__ == "__main__":
     print(main())

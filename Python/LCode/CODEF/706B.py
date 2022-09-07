@@ -1,4 +1,4 @@
-def binary_search(arr,num):
+def binary_search(arr, num):
     total = 0
     if len(arr) <= 2:
         return sum([int(num >= x) for x in arr])
@@ -12,6 +12,7 @@ def binary_search(arr,num):
         return mid + 1 + binary_search(arr[mid+1:], num)
     else:
         return binary_search(arr[:mid], num)
+
 
 input()
 shops = sorted([int(x) for x in input().split()])

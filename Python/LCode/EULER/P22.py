@@ -1,4 +1,6 @@
-file = open(r'C:\Users\villa\Documents\General\General\LCode\EULER\p022_names.txt', 'r')
+file = open(
+    r'C:\Users\villa\Documents\General\General\LCode\EULER\p022_names.txt',
+    'r')
 names = sorted([x[1:-1] for x in file.readline().split(',')])
 total = 0
 

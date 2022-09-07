@@ -4,9 +4,9 @@ def addprimelist(p):
     while True:
         if not any([i % x == 0 for x in p]):
             p.append(i)
-            return(p)
+            return p
         i = i + 1
-    
+
 
 def largestfactor(n):
     p = [2]
@@ -26,5 +26,6 @@ def largestfactor(n):
             if max(p) > n ** 0.5:
                 return int(n)
             p = addprimelist(p)
+
 
 print(largestfactor(11111111111))
