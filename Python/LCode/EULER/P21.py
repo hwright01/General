@@ -8,8 +8,6 @@ def factor_list_max(n):
         while i >= num ** 0.5:
             if num % i == 0:
                 facs = set(factors[i])
-                if num == 220:
-                    pass
                 facs.update({i, int(num/i)})
                 try:
                     facs.remove(num)
