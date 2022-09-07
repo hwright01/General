@@ -27,9 +27,7 @@ def factor_list(n):
     while num < n:
         for i in range(2, int(num ** 0.5)+1):
             if num % i == 0:
-                facs = set(factors[i])
-                facs.update({i, int(num/i)})
-                factors[num].update(facs)
+                factors[num].update({i, int(num/i)})
         if (num ** 0.5).is_integer():
             factors[num].update({int(num ** 0.5)})
         num += 1
