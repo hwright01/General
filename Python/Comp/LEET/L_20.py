@@ -1,6 +1,6 @@
 def isvalid(s):
     queue = []
-    for index, value in enumerate(s):
+    for _, value in enumerate(s):
         if value in ['{', '[', '(']:
             queue.append(value)
         elif queue == []:
