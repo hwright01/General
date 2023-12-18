@@ -1,0 +1,110 @@
+theory Chapter_3
+imports Main
+begin
+
+datatype 'a tree = Tip | Node "'a tree" 'a "'a tree"
+
+(*3.1*)
+
+fun set :: "'a tree \<Rightarrow> 'a set" where
+"set Tip = {}"|
+"set (Node l a r) = {a} Un (set l) Un (set r)"
+
+fun leq_tree :: "int tree \<Rightarrow> int \<Rightarrow> bool" where
+"leq_tree Tip x = True"|
+"leq_tree (Node l a r) x = ((a \<le> x) & (leq_tree l x) & (leq_tree r x))"
+
+fun ge_tree :: "int tree \<Rightarrow> int \<Rightarrow> bool" where
+"ge_tree Tip x = True"|
+"ge_tree (Node l a r) x = ((a > x) & (ge_tree l x) & (ge_tree r x))"
+
+fun ord :: "int tree \<Rightarrow> bool" where
+"ord Tip = True"|
+"ord (Node l a r) = ((leq_tree l a) & (ord l) & (ge_tree r a) & (ord r))"
+
+fun ins :: "int \<Rightarrow> int tree \<Rightarrow> int tree" where
+"ins x Tip = (Node Tip x Tip)"|
+"ins x (Node l a r) = (if (x = a) then (Node l a r) else (if (x \<le> a) then (Node (ins x l) a r) else (Node l a (ins x r))))"
+
+lemma ins_correct_1: "set (ins x t) = {x} Un set t"
+  by (induction t) auto
+
+lemma ins_leq: "leq_tree t x1 \<longrightarrow> x2 \<le> x1 \<longrightarrow> leq_tree (ins x2 t) x1"
+  by (induction t) auto
+
+lemma ins_ge: "ge_tree t x1 \<longrightarrow> x2 > x1 \<longrightarrow> ge_tree (ins x2 t) x1"
+  by (induction t) auto
+
+lemma ins_correct_2: "ord t \<longrightarrow> ord (ins i t)"
+  apply(induction t)
+  by (auto simp add: ins_leq ins_ge)
+
+(*3.2*)
+
+(* Exercise 3.3 *)
+
+inductive star :: "('a \<Rightarrow> 'a \<Rightarrow> bool) \<Rightarrow> 'a \<Rightarrow> 'a \<Rightarrow> bool" for r where 
+refl : "star r x x" |
+step : " r x y  \<Longrightarrow> star r y z \<Longrightarrow> star r x z"
+
+inductive star' :: "('a \<Rightarrow> 'a \<Rightarrow> bool) \<Rightarrow> 'a \<Rightarrow> 'a \<Rightarrow> bool" for r where 
+refl' : "star' r x x" |
+step' : "star' r x y \<Longrightarrow> r y z \<Longrightarrow> star' r x z"
+
+lemma star_step_symm [intro] : "star r x y \<Longrightarrow> r y z \<Longrightarrow> star r x z"
+  apply(induction rule: star.induct)
+   apply(rule step)
+    apply(auto)
+   apply(rule refl)
+  apply(rule step)
+   apply(auto)
+  done
+
+lemma star'_step'_symm [intro] : "  star' r y z \<Longrightarrow> r x y  \<Longrightarrow>  star' r x z"
+ apply(induction rule: star'.induct)
+   apply(rule step')
+    apply(auto)
+   apply(rule refl')
+  apply(rule step')
+   apply(auto)
+  done
+
+lemma star_star'_equiv : "star' r x y = star r x y"
+  apply(rule)
+   apply(induction rule: star'.induct)
+    apply(simp add: refl)
+   apply(auto)
+  apply(induction rule: star.induct)
+   apply(rule refl')
+  apply(auto)
+  done
+
+(* Exercise 3.4 *)
+
+inductive iter :: "('a \<Rightarrow> 'a \<Rightarrow> bool) \<Rightarrow> nat \<Rightarrow> 'a \<Rightarrow> 'a \<Rightarrow> bool" for r where
+ iter0: "iter r 0 x x"
+| iter1: "r x y \<Longrightarrow>  iter r (Suc 0) x y"
+| iter_step: "iter r n x y \<Longrightarrow> iter r m y z \<Longrightarrow> iter r (n + m) x z"
+
+lemma trivial [simp] : "  iter r n y z \<Longrightarrow> \<exists> m.  iter r m y z"
+  by auto
+
+lemma iter_spec : " star r x y \<Longrightarrow> EX n.  iter r n x y"
+  apply(induction rule: star.induct)
+   apply(rule)
+   apply(rule iter0)
+  apply(auto)
+  apply(rule)
+  apply(rule iter_step)
+   apply(rule iter1)
+   apply(assumption)
+  apply(rule)
+   apply(auto)
+  apply(rule iter0)
+  done
+  
+  
+end
+
+
+  

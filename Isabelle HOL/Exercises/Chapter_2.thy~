@@ -1,0 +1,155 @@
+theory Chapter_2
+imports Main
+begin
+
+(*2.1*)
+value "1 + (2::nat)"
+value "1 + (2::int)"
+value "1 - (2::nat)"
+value "1 - (2::int)"
+
+(*2.2*)
+fun add :: "nat \<Rightarrow> nat \<Rightarrow> nat" where
+"add 0 n = n" |
+"add (Suc m) n = Suc(add m n)"
+
+lemma add_assoc [simp] : "add (add p q) r  = add p (add q r)"
+  apply(induction p)
+   apply(auto)
+  done
+
+lemma add_02 [simp] : "add m 0 = m" apply(induction m)
+apply(auto)
+done
+
+lemma add_plus1 [simp] : "Suc (add q p) = add q (Suc p)"
+  apply(induction q)
+   apply(auto)
+  done
+
+lemma add_comm [simp] : "add p q = add q p"
+  apply(induction p)
+   apply(auto)
+  done
+
+fun double :: "nat \<Rightarrow> nat" where
+"double 0 = 0"|
+"double (Suc(n)) = Suc(Suc(double(n)))"
+
+lemma doublen [simp] : "double m = add m m"
+  apply(induction m)
+   apply(auto)
+  done
+
+(*2.3*)
+fun count :: "'a \<Rightarrow> 'a list \<Rightarrow> nat" where
+"count x [] = 0"|
+"count x (t # xs) = (if x = t then 1 else 0) + (count x xs)"
+
+lemma countconstraint: "count x xs \<le> length xs"
+  apply(induction xs)
+   apply(auto)
+  done
+
+(*2.4*)
+fun snoc :: "'a list \<Rightarrow> 'a \<Rightarrow> 'a list" where
+"snoc [] x = [x]"|
+"snoc (t # xs) x = t # (snoc xs x)"
+
+fun reverse :: "'a list \<Rightarrow> 'a list" where
+"reverse [] = []"|
+"reverse (x # xs) = snoc (reverse xs) x"
+
+lemma reversnoc[simp]: "reverse (snoc xs a) = a # (reverse xs)"
+  apply(induction xs)
+   apply auto
+  done
+
+lemma reversym: "reverse (reverse xs) = xs"
+  apply(induction xs)
+  apply auto
+  done
+
+(*2.5*)
+fun sum_upto :: "nat \<Rightarrow> nat" where
+"sum_upto 0 = 0"|
+"sum_upto (Suc(x)) = 1 + x + sum_upto(x)"
+
+lemma sum_from: "sum_upto n = n * (n+1) div 2"
+  apply(induction n)
+   apply(auto)
+  done      
+
+(*2.6*)
+datatype 'a tree = Tip | Node "'a tree" 'a "'a tree"
+
+fun contents :: "'a tree \<Rightarrow> 'a list" where
+"contents Tip = []"|
+"contents (Node l a r) = (contents l) @ (a # contents r)"
+
+fun sum_tree :: "nat tree \<Rightarrow> nat" where
+"sum_tree Tip = 0"|
+"sum_tree (Node l a r) = (sum_tree l) + a + (sum_tree r)"
+
+lemma sum_equiv: "sum_tree t = sum_list (contents t)"
+  apply (induction t)
+   apply auto
+  done
+
+(*2.7*)
+
+fun pre_order :: "'a tree \<Rightarrow> 'a list" where
+"pre_order Tip = []"|
+"pre_order (Node l a r) = (pre_order l) @ (a # (pre_order r))"
+
+fun post_order :: "'a tree \<Rightarrow> 'a list" where
+"post_order Tip = []"|
+"post_order (Node l a r) = (pre_order r) @ (a # (pre_order l))"
+
+fun mirror :: "'a tree \<Rightarrow> 'a tree" where
+"mirror Tip = Tip"|
+"mirror (Node l a r) = Node (mirror r)  a (mirror l)"
+
+(*Not well defined but doesn't matter*)
+
+(*2.8*)
+
+fun intersperse :: "'a \<Rightarrow> 'a list \<Rightarrow> 'a list" where
+"intersperse a [] = []"|
+"intersperse a [x] = [x]"|
+"intersperse a (x # xs) = x # (a # (intersperse a xs))"
+
+lemma map_sperse: "map f (intersperse a xs) = intersperse (f a) (map f xs)"
+  apply(induction a xs rule: intersperse.induct)
+    apply(auto)
+  done
+
+(*2.9*)
+fun itadd :: "nat \<Rightarrow> nat \<Rightarrow> nat" where
+"itadd 0 n = n"|
+"itadd (Suc 0) n = Suc n"|
+"itadd (Suc m) n = itadd (Suc 0) (itadd m n)"
+
+lemma add_1 : "Suc m = add m (Suc 0)"
+  apply(induction m)
+   apply(auto)
+  done
+
+lemma add_equiv: "itadd n m = add n m"
+  apply(induction n m rule: itadd.induct)
+    apply(auto)
+  apply(rule add_1)
+  done
+
+(*2.10*)
+datatype tree0 = Tip | Node "tree0" "tree0"
+
+fun explode :: "nat \<Rightarrow> tree0 \<Rightarrow> tree0" where
+"explode 0 t = t" |
+"explode (Suc n) t = explode n (Node t t)"
+
+fun nodes :: "tree0 \<Rightarrow> nat" where
+"nodes Tip = 1"|
+"nodes (Node l r) = nodes l + nodes r"
+
+end
